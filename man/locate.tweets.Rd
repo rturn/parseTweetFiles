@@ -2,11 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{locate.tweets}
 \alias{locate.tweets}
-\title{Labels an array of geo-located tweets with zip codes using shapefiles provided by the Census Bureau. This function
-should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets outside the
-US are removed before returning the data frame. To run this function the shapefile needs to be downloaded and placed
-in the working directory. The shapefile is made up of multiple files, and they can all be found at
-https://www.census.gov/geo/maps-data/data/cbf/cbf_zcta.html}
+\title{Matches tweets to zip codes}
 \usage{
 locate.tweets(located_tweets)
 }

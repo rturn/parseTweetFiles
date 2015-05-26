@@ -2,8 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{clean_links}
 \alias{clean_links}
-\title{Removes all punctuation from tweet text while also removing the protocol (http) and domain (.com) indicators from
-any links in the text.}
+\title{Handles link symbols}
 \usage{
 clean_links(x)
 }

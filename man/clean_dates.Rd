@@ -2,7 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{clean_dates}
 \alias{clean_dates}
-\title{Remove extra information from dates and sort them}
+\title{Formats timestamps}
 \usage{
 clean_dates(x)
 }

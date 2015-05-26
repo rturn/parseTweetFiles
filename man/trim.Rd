@@ -2,7 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{trim}
 \alias{trim}
-\title{Removes all trailing / leading white space from a tweet.}
+\title{Handles leading / trailing white space.}
 \usage{
 trim(x)
 }

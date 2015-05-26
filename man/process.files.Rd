@@ -2,8 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{process.files}
 \alias{process.files}
-\title{Processes all tweet-files in a directory and saves them in the given directory. This functions filters each
-files variables, runs clean.tweets on them, and runs locate.tweets on them if desired.}
+\title{Processes a folder of tweet files}
 \usage{
 process.files(tweetdir, outputdir, loc = FALSE, vars = "text", ...)
 }

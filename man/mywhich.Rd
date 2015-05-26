@@ -2,7 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{mywhich}
 \alias{mywhich}
-\title{Removes all words in an array that are on a given stoplist}
+\title{Handles stopwords}
 \usage{
 mywhich(word.vector, stoplist)
 }

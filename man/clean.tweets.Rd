@@ -2,9 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{clean.tweets}
 \alias{clean.tweets}
-\title{Performs all necessary cleaning on a data frame of tweets. This includes removing all symbols from tweets, converting
-them to a lower case array of words, removing all stop words from this array, andconverting timestamps to an
-R usable format. Can also filter by time zone if desired (default does not filter)}
+\title{Cleans tweet data frames}
 \usage{
 clean.tweets(tweets.df, tz = NULL, stoplist = NULL)
 }

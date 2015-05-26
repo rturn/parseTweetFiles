@@ -90,8 +90,6 @@ mywhich <- function(word.vector, stoplist) {
   word.vector[which(word.vector != "")]
 }
 
-#' Cleans tweet data frames
-#' 
 #' Performs all necessary cleaning on a data frame of tweets. This includes removing all symbols from tweets, converting
 #' them to a lower case array of words, removing all stop words from this array, andconverting timestamps to an 
 #' R usable format. Can also filter by time zone if desired (default does not filter)
@@ -153,8 +151,6 @@ clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
   return(linkless_tweets)
 }
 
-#' Matches tweets to zip codes
-#'
 #' Labels an array of geo-located tweets with zip codes using shapefiles provided by the Census Bureau. This function
 #' should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets outside the
 #' US are removed before returning the data frame. To run this function the shapefile needs to be downloaded and placed
@@ -200,8 +196,6 @@ locate.tweets = function(located_tweets) {
   return(zipped_tweets)
 }
 
-#' Processes a folder of tweet files
-#' 
 #' Processes all tweet-files in a directory and saves them in the given directory. This functions filters each
 #' files variables, runs clean.tweets on them, and runs locate.tweets on them if desired. 
 #' 
@@ -219,7 +213,7 @@ locate.tweets = function(located_tweets) {
 #' \dontrun{process.files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
 #' vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)}
 #' 
-#'  @export 
+#' @export 
 process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   filenames = dir(tweetdir)
   editedfns = paste(filenames, "e", sep = "")

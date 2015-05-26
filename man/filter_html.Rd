@@ -2,7 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{filter_html}
 \alias{filter_html}
-\title{Removes all html codes that represent symbols / puncation.}
+\title{Handles HTML expressions}
 \usage{
 filter_html(x)
 }
