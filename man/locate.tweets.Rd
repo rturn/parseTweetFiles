@@ -2,7 +2,7 @@
 % Please edit documentation in R/parseTweetFiles.R
 \name{locate.tweets}
 \alias{locate.tweets}
-\title{Matches tweets to zip codes}
+\title{Matches tweets to zipcodes}
 \usage{
 locate.tweets(located_tweets)
 }

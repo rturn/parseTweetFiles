@@ -18,8 +18,8 @@ The tweet data frame with all editing / filtering done.
 }
 \description{
 Performs all necessary cleaning on a data frame of tweets. This includes removing all symbols from tweets, converting
-them to a lower case array of words, removing all stop words from this array, andconverting timestamps to an
-R usable format. Can also filter by time zone if desired (default does not filter)
+them to lower case, removing all stop words, and converting timestamps to an R usable format.
+Can also filter by time zone if desired (default does not filter)
 }
 \examples{
 \dontrun{df = select(rawdata, text, time_zone)}
