@@ -1,3 +1,5 @@
+#' Handles link symbols
+#'
 #' Removes all punctuation from tweet text while also removing the protocol (http) and domain (.com) indicators from 
 #' any links in the text.
 #' 
@@ -17,6 +19,8 @@ clean_links = function(x) {
   x = gsub("[[:punct:]]", "", x)
 }
 
+#' Handles HTML expressions
+#' 
 #' Removes all html codes that represent symbols / puncation.
 #' 
 #' @param x A string or array of strings to remove symbols from
@@ -41,6 +45,8 @@ filter_html = function(x) {
   x = gsub(".", "", x, fixed = TRUE)
 }
 
+#' Handles leading / trailing white space.
+#' 
 #' Removes all trailing / leading white space from a tweet.
 #' 
 #' @param x The tweet to remove white space from.
@@ -49,9 +55,10 @@ filter_html = function(x) {
 #' @examples
 #' \dontrun{text = trim(text)}
 #' 
-#'
 trim <- function (x) gsub("^\\s+|\\s+$", "", x) 
 
+#' Formats timestamps
+#' 
 #' Remove extra information from dates and sort them
 #' 
 #' @param x The date of a tweet
@@ -65,6 +72,8 @@ clean_dates = function(x) {
   x = paste(x[c(2,3,6,4)], collapse = ".")
 }
 
+#' Handles stopwords
+#' 
 #' Removes all words in an array that are on a given stoplist
 #' 
 #' @param word.vector An array of words to filter
@@ -81,6 +90,8 @@ mywhich <- function(word.vector, stoplist) {
   word.vector[which(word.vector != "")]
 }
 
+#' Cleans tweet data frames
+#' 
 #' Performs all necessary cleaning on a data frame of tweets. This includes removing all symbols from tweets, converting
 #' them to a lower case array of words, removing all stop words from this array, andconverting timestamps to an 
 #' R usable format. Can also filter by time zone if desired (default does not filter)
@@ -96,6 +107,8 @@ mywhich <- function(word.vector, stoplist) {
 #' \dontrun{tweets = clean.tweets(dataframe)}
 #' \dontrun{tweets = clean.tweets(dataframe, tz = c("Pacific Time (US & Canada)", "Eastern Time (US & Canada)),
 #' stoplist = stoplist))}
+#' 
+#' @export
 #' 
 clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
   geo_tweets = tweets.df
@@ -140,6 +153,8 @@ clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
   return(linkless_tweets)
 }
 
+#' Matches tweets to zip codes
+#'
 #' Labels an array of geo-located tweets with zip codes using shapefiles provided by the Census Bureau. This function
 #' should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets outside the
 #' US are removed before returning the data frame. To run this function the shapefile needs to be downloaded and placed
@@ -154,6 +169,7 @@ clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
 #' \dontrun{tweets = clean.tweets(dataframe)}
 #' \dontrun{located_tweets = locate.tweets(tweets)}
 #' 
+#' @export
 locate.tweets = function(located_tweets) {
   if(is.null(located_tweets$lat) || is.null(located_tweets$lon)) {
     print("Error, can't assign zip codes to tweets with no geo tags")
@@ -184,6 +200,8 @@ locate.tweets = function(located_tweets) {
   return(zipped_tweets)
 }
 
+#' Processes a folder of tweet files
+#' 
 #' Processes all tweet-files in a directory and saves them in the given directory. This functions filters each
 #' files variables, runs clean.tweets on them, and runs locate.tweets on them if desired. 
 #' 
@@ -200,7 +218,8 @@ locate.tweets = function(located_tweets) {
 #' \dontrun{process.files("~/Documents/RawTweets", "~/Documents/EditedTweets")}
 #' \dontrun{process.files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
 #' vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)}
-#'  
+#' 
+#'  @export 
 process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   filenames = dir(tweetdir)
   editedfns = paste(filenames, "e", sep = "")
