@@ -93,8 +93,8 @@ mywhich <- function(word.vector, stoplist) {
 #' Cleans tweet data frames
 #' 
 #' Performs all necessary cleaning on a data frame of tweets. This includes removing all symbols from tweets, converting
-#' them to a lower case array of words, removing all stop words from this array, andconverting timestamps to an 
-#' R usable format. Can also filter by time zone if desired (default does not filter)
+#' them to lower case, removing all stop words, and converting timestamps to an R usable format. 
+#' Can also filter by time zone if desired (default does not filter)
 #' 
 #' @param tweets.df An array of tweets with desired variables attached. (Use dplyr to filter variables)
 #' @param tz A list of time zones to filter by, currently case sensitive
@@ -255,4 +255,27 @@ process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
     output[i] = filenames[i]
   }
   return(output)
+}
+
+#' Create a data frame from multiple tweet files
+#'
+#' This function reads in a folder of tweet file then combines them all into one usable data frae
+#' 
+#' @param tweetdir The file directory containing the tweet files. No other files should be in this folder.
+#' 
+#' @return A dataframe containing every tweet.
+#'
+#' @examples
+#' \dontrun{make.tweet.df("~/Documents/EditedTweets")} 
+#'
+#' @export
+make.tweet.df = function(tweetdir) {
+  filenames = dir(tweetdir)
+  df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T, fileEncoding = "latin1")
+  for(i in 2:length(filenames)) {
+    filename = filenames[i]
+    temp = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "latin1")
+    df = rbind(df, temp)
+  }
+  return(df)
 }
