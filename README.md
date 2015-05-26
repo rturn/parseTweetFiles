@@ -15,5 +15,5 @@ For most uses, this package is easy to use. Just place all tweets you want to ed
 ```{r, eval = FALSE}
 process.files("~/Documents/RawTweets", "~/Documents/EditedTweets")
 process.files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
-vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)
+    vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)
 ```
