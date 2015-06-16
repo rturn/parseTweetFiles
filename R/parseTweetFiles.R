@@ -184,7 +184,7 @@ locate_tweets = function(located_tweets) {
   }
   
   #Shapefile from https://www.census.gov/geo/maps-data/data/cbf/cbf_state.html 
-  areas = readShapeSpatial(system.file("extdata", "cb_2014_us_state_5m.shp", package = "parseTweetFiles"))
+  areas = readShapeSpatial(system.file("extdata", "cb_2014_us_state_500k.shp", package = "parseTweetFiles"))
   
   #Convert the lon/lat points to coords
   points = data.frame(tagged_tweets$lon, tagged_tweets$lat)
