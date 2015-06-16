@@ -104,13 +104,13 @@ mywhich <- function(word.vector, stoplist) {
 #' 
 #' @examples
 #' \dontrun{df = select(rawdata, text, time_zone)}
-#' \dontrun{tweets = clean.tweets(dataframe)}
-#' \dontrun{tweets = clean.tweets(dataframe, tz = c("Pacific Time (US & Canada)", "Eastern Time (US & Canada)),
+#' \dontrun{tweets = clean_tweets(dataframe)}
+#' \dontrun{tweets = clean_tweets(dataframe, tz = c("Pacific Time (US & Canada)", "Eastern Time (US & Canada)),
 #' stoplist = stoplist))}
 #' 
 #' @export
 #' 
-clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
+clean_tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
   geo_tweets = tweets.df
   
   if(!is.null(tz)) {
@@ -155,55 +155,57 @@ clean.tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
 
 #' Matches tweets to zipcodes
 #' 
-#' Labels an array of geo-located tweets with zip codes using shapefiles provided by the Census Bureau. This function
-#' should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets outside the
-#' US are removed before returning the data frame. To run this function the shapefile needs to be downloaded and placed
-#' in the working directory. The shapefile is made up of multiple files, and they can all be found at
-#' https://www.census.gov/geo/maps-data/data/cbf/cbf_zcta.html
+#' Labels an array of geo-located tweets with state abbreviations using shapefiles provided by the Census Bureau. This function
+#' should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets without
+#' lattitude / longitude codes are labeled with NA.
 #' 
 #' @param located_tweets A cleaned array of tweets with latitude / longitude variables.
 #' 
-#' @return The tweet data frame with all in US tweets labeled with a zipcode and all non-US tweets removed
+#' @return The tweet data frame with all in US tweets labeled with a state and all others with NA
 #'         
 #' @examples
-#' \dontrun{tweets = clean.tweets(dataframe)}
-#' \dontrun{located_tweets = locate.tweets(tweets)}
+#' \dontrun{tweets = clean_tweets(dataframe)}
+#' \dontrun{located_tweets = locate_tweets(tweets)}
 #' 
 #' @export
-locate.tweets = function(located_tweets) {
+locate_tweets = function(located_tweets) {
   if(is.null(located_tweets$lat) || is.null(located_tweets$lon)) {
-    print("Error, can't assign zip codes to tweets with no geo tags")
-    return(located_tweets)
+    temp = rep(NA, length(located_tweets[,1]))
+    edited_tweets = data.frame(located_tweets, temp)
+    return(edited_tweets)
   }
-  temp = filter(located_tweets, lon != "NA", lat != "NA")
-  if(nrow(temp) == 0) {
-    print("Error, all tweets non-geolocated")
-    return(located_tweets)
-  }
-  located_tweets = temp
+  untagged_tweets = filter(located_tweets, is.na(lon) | is.na(lat))
+  tagged_tweets = filter(located_tweets, !is.na(lon) & !is.na(lat))
   
-  #Shapefile from https://www.census.gov/geo/maps-data/data/cbf/cbf_zcta.html Every file in the folder is part of the shapefile
-  #Read the polygons for the zip code areas
-  areas = readShapeSpatial("cb_2013_us_zcta510_500k.shp")
+  if(nrow(tagged_tweets) == 0) {
+    temp = rep(NA, length(located_tweets[,1]))
+    edited_tweets = data.frame(located_tweets, temp)
+    return(edited_tweets)
+  }
+  
+  #Shapefile from https://www.census.gov/geo/maps-data/data/cbf/cbf_state.html 
+  areas = readShapeSpatial(system.file("extdata", "cb_2014_us_state_5m.shp", package = "parseTweetFiles"))
   
   #Convert the lon/lat points to coords
-  points = data.frame(located_tweets$lon, located_tweets$lat)
+  points = data.frame(tagged_tweets$lon, tagged_tweets$lat)
   points = SpatialPoints(points)
   
-  #Overlay the points into the polygons, mapping the coordinates to zip codes
-  zipdata = over(points, areas)
+  #Overlay the points into the polygons, mapping the coordinates to states
+  statedata = over(points, areas)
   
-  #Filter the zip codes from the data frame, attach them to the tweets, and remove null zip codes
-  zip = zipdata$ZCTA5CE10
-  zipped_tweets = data.frame(located_tweets, zip)
-  zipped_tweets = filter(zipped_tweets, zip != "NA")
-  return(zipped_tweets)
+  #Filter the states from the data frame, attach them to the tweets
+  state = statedata$STUSPS
+  state_tweets = data.frame(tagged_tweets, state)
+  state = rep(NA, length(untagged_tweets[,1]))
+  temp = data.frame(untagged_tweets, state)
+  edited_tweets = rbind(state_tweets, temp)
+  return(edited_tweets)
 }
 
 #' Processes a folder of tweet files
 #' 
 #' Processes all tweet-files in a directory and saves them in the given directory. This functions filters each
-#' files variables, runs clean.tweets on them, and runs locate.tweets on them if desired. 
+#' files variables, runs clean_tweets on them, and runs locate_tweets on them if desired. 
 #' 
 #' @param tweetdir The file directory of tweets to read from. No files other than the tweet files should be in this 
 #' directory. The tweet files should be in the format as provided by streamR's parseTweets.
@@ -215,12 +217,12 @@ locate.tweets = function(located_tweets) {
 #' @return The list of filenames edited.
 #'         
 #' @examples
-#' \dontrun{process.files("~/Documents/RawTweets", "~/Documents/EditedTweets")}
-#' \dontrun{process.files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
+#' \dontrun{process_files("~/Documents/RawTweets", "~/Documents/EditedTweets")}
+#' \dontrun{process_files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
 #' vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)}
 #' 
 #' @export 
-process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
+process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   filenames = dir(tweetdir)
   editedfns = paste(filenames, "e", sep = "")
   existing = dir(outputdir)
@@ -241,9 +243,9 @@ process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
     if(file.info(paste(tweetdir, filename, sep = "/"))$size != 0) {
       tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "latin1")
       tweets.df = select(tweets.df, one_of(vars))
-      etweets.df = clean.tweets(tweets.df, tz = extras$tz, stoplist = extras$stoplist) 
+      etweets.df = clean_tweets(tweets.df, tz = extras$tz, stoplist = extras$stoplist) 
       if(loc == TRUE) {
-        etweets.df = locate.tweets(etweets.df)
+        etweets.df = locate_tweets(etweets.df)
       }
       write.csv(x = etweets.df, file = paste(paste(outputdir, filename, sep = "/"), "e", sep = ""), row.names = FALSE)
     }
@@ -269,7 +271,7 @@ process.files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
 #' \dontrun{make.tweet.df("~/Documents/EditedTweets")} 
 #'
 #' @export
-make.tweet.df = function(tweetdir) {
+make_tweet_df = function(tweetdir) {
   filenames = dir(tweetdir)
   df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T, fileEncoding = "latin1")
   for(i in 2:length(filenames)) {
@@ -279,3 +281,31 @@ make.tweet.df = function(tweetdir) {
   }
   return(df)
 }
+
+#' 5634 Tweets about Ferguson
+#'
+#' A dataset containing the text and metadata of 5634 tweets containing keywords concerning Ferguson or other
+#' related incidents.
+#'
+#' @format A data frame with 5634 rows and 42 columns
+#' 
+#' @source Downloaded using the streamR filterstream function.
+"fergusontweets"
+
+#' 7585 Tweets from the US
+#'
+#' A dataset containing the text and metadata of 7585 tweets on any topic sent from the US.
+#'
+#' @format A data frame with 7585 rows and 42 columns
+#' 
+#' @source Downloaded using the streamR filterstream function.
+"locatedtweets"
+
+#' 655 random tweets
+#'
+#' A dataset containing the text and metadata of 655 on any topic sent from any location.
+#'
+#' @format A data frame with 655 rows and 42 columns
+#' 
+#' @source Downloaded using the streamR filterstream function.
+"unlocatedtweets"

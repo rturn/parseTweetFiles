@@ -1,5 +1,5 @@
 Package: parseTweetFiles
-Version: 0.5
+Version: 0.6
 Title: Parse Tweet Files
 Description: All code necessary to convert tweet files downloaded by the StreamR package to a usable format. Can tag tweets with zip codes, filter variables, filter by time zone, remove all strange symbols from tweets, and convert them into a character array.
 License: MIT + file LICENSE
