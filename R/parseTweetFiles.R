@@ -1,52 +1,32 @@
-#' Handles link symbols
-#'
-#' Removes all punctuation from tweet text while also removing the protocol (http) and domain (.com) indicators from 
-#' any links in the text.
+#' Text cleaner
 #' 
-#' @param x A string or array of strings to remove symbols from
+#' Cleans all garbage symbols, links, retweet tags, etc from the tweet text.
 #' 
-#' @return The string or array of strings with the symbols removed
+#' @param x A string to remove symbols from
+#' 
+#' @return The string with the symbols removed
+#' 
 #' @examples
-#' \dontrun{text = unlist(lapply(tweets$text, clean_links))}
+#' \dontrun{text = unlist(lapply(tweet.df$text, clean_text))}
 #' 
 #' @export
 #' 
-clean_links = function(x) {
+clean_text = function(x) {
   x = as.character(x)
+  x = gsub("<ed>", "", x)
+  x = gsub("+", "", x, fixed = TRUE)
+  x = gsub("<U[0-9a-fA-F]{4}>", "", x)
+  
   y = unlist(strsplit(x, "\\s+"))
   x = paste(y[!grepl("@|\\.com|\\.org|\\.net|http|RT|-", y)], collapse = " ") #Change these to remove different link artifacts
-  x = gsub("&|/", " ", x) 
-  x = gsub("[[:punct:]]", "", x)
-  return(x)
-}
 
-#' Handles HTML expressions
-#' 
-#' Removes all html codes that represent symbols / puncation.
-#' 
-#' @param x A string or array of strings to remove symbols from
-#' 
-#' @return The string or array of strings with the symbols removed
-#' 
-#' @examples
-#' \dontrun{text = filter_html(text)}
-#' 
-#' @export
-#' 
-filter_html = function(x) {
-  x = as.character(x)
-  x = gsub("persuaded", "persuadex", x)
-  x = gsub("u[0-9a-fA-F]{4}", "", x)
-  x = gsub("persuadex", "persuaded", x)
-  x = sub("&amp;#039;", "'", x)
-  x = sub("&amp;", "&", x)
-  x = sub("&gt;", ">", x)
-  x = sub("&lt;", "<", x)
-  x = iconv(x, "latin1", "ASCII", sub = "")
-  x = gsub("#|_|:|\"|,|'","",x)
-  x = gsub("|", "", x, fixed = TRUE)
-  x = gsub("&", "", x, fixed = TRUE)
-  x = gsub(".", "", x, fixed = TRUE)
+  x = sub("&amp;#039;", "", x)
+  x = sub("&amp;", "", x)
+  x = sub("&gt;", "", x)
+  x = sub("&lt;", "", x)
+  x = iconv(x, "UTF-8", "ASCII", sub = "")
+  x = gsub("[[:punct:]]", "", x)
+  x = gsub("\\s+", " ", x)
   return(x)
 }
 
@@ -132,8 +112,7 @@ clean_tweets = function(tweets.df, tz = NULL, stoplist = NULL) {
   }
   
   #Filter links and html codes from text
-  geo_tweets$text = filter_html(geo_tweets$text) 
-  text = unlist(lapply(geo_tweets$text, clean_links))
+  text = unlist(lapply(geo_tweets$text, clean_text))
   text = trim(text)
   text = tolower(text)
   geo_tweets$text = text
@@ -246,9 +225,10 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   for(i in 1:length) {
     filename = filenames[i]
     if(file.info(paste(tweetdir, filename, sep = "/"))$size != 0) {
-      tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "latin1")
+      tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "UTF-8")
       tweets.df = select(tweets.df, one_of(vars))
       etweets.df = clean_tweets(tweets.df, tz = extras$tz, stoplist = extras$stoplist) 
+      etweets.df = filter(etweets.df, text != "")
       if(loc == TRUE) {
         etweets.df = locate_tweets(etweets.df)
       }
@@ -278,10 +258,10 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
 #' @export
 make_tweet_df = function(tweetdir) {
   filenames = dir(tweetdir)
-  df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T, fileEncoding = "latin1")
+  df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T, fileEncoding = "UTF-8")
   for(i in 2:length(filenames)) {
     filename = filenames[i]
-    temp = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "latin1")
+    temp = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "UTF-8")
     df = rbind(df, temp)
   }
   return(df)
