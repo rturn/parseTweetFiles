@@ -6,5 +6,5 @@ License: MIT + file LICENSE
 Author: Robert Turner <rwturner@wisc.edu>
 Maintainer: Robert Turner <rwturner@wisc.edu>
 Suggests: knitr, rmarkdown
-Imports: dplyr, sp, maptools
+Depends: dplyr, sp, maptools
 VignetteBuilder: knitr
