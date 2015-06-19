@@ -17,9 +17,7 @@ clean_links = function(x) {
   x = paste(y[!grepl("@|\\.com|\\.org|\\.net|http|RT|-", y)], collapse = " ") #Change these to remove different link artifacts
   x = gsub("&|/", " ", x) 
   x = gsub("[[:punct:]]", "", x)
-  x = gsub("persuaded", "persuadex", x)
-  x = gsub("u[0-9a-fA-F]{4}", "", x)
-  x = gsub("persuadex", "persuaded", x)
+  return(x)
 }
 
 #' Handles HTML expressions
@@ -37,6 +35,9 @@ clean_links = function(x) {
 #' 
 filter_html = function(x) {
   x = as.character(x)
+  x = gsub("persuaded", "persuadex", x)
+  x = gsub("u[0-9a-fA-F]{4}", "", x)
+  x = gsub("persuadex", "persuaded", x)
   x = sub("&amp;#039;", "'", x)
   x = sub("&amp;", "&", x)
   x = sub("&gt;", ">", x)
@@ -46,6 +47,7 @@ filter_html = function(x) {
   x = gsub("|", "", x, fixed = TRUE)
   x = gsub("&", "", x, fixed = TRUE)
   x = gsub(".", "", x, fixed = TRUE)
+  return(x)
 }
 
 #' Handles leading / trailing white space.
