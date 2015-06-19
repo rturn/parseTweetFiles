@@ -17,7 +17,9 @@ clean_links = function(x) {
   x = paste(y[!grepl("@|\\.com|\\.org|\\.net|http|RT|-", y)], collapse = " ") #Change these to remove different link artifacts
   x = gsub("&|/", " ", x) 
   x = gsub("[[:punct:]]", "", x)
-  x = gsub("u[0-9]{4}", "", x)
+  x = gsub("persuaded", "persuadex", x)
+  x = gsub("u[0-9a-fA-F]{4}", "", x)
+  x = gsub("persuadex", "persuaded", x)
 }
 
 #' Handles HTML expressions
