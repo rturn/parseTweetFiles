@@ -10,14 +10,12 @@ locate_tweets(located_tweets)
 \item{located_tweets}{A cleaned array of tweets with latitude / longitude variables.}
 }
 \value{
-The tweet data frame with all in US tweets labeled with a zipcode and all non-US tweets removed
+The tweet data frame with all in US tweets labeled with a state and all others with NA
 }
 \description{
-Labels an array of geo-located tweets with zip codes using shapefiles provided by the Census Bureau. This function
-should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets outside the
-US are removed before returning the data frame. To run this function the shapefile needs to be downloaded and placed
-in the working directory. The shapefile is made up of multiple files, and they can all be found at
-https://www.census.gov/geo/maps-data/data/cbf/cbf_zcta.html
+Labels an array of geo-located tweets with state abbreviations using shapefiles provided by the Census Bureau. This function
+should be run after cleaning the tweets, and only works on tweets with a latitude / longitude. Any tweets without
+lattitude / longitude codes are labeled with NA.
 }
 \examples{
 \dontrun{tweets = clean_tweets(dataframe)}
