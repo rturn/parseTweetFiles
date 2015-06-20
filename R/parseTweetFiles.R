@@ -225,7 +225,7 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   for(i in 1:length) {
     filename = filenames[i]
     if(file.info(paste(tweetdir, filename, sep = "/"))$size != 0) {
-      tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "UTF-8")
+      tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T)
       tweets.df = select(tweets.df, one_of(vars))
       etweets.df = clean_tweets(tweets.df, tz = extras$tz, stoplist = extras$stoplist) 
       etweets.df = filter(etweets.df, text != "")
