@@ -258,10 +258,10 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
 #' @export
 make_tweet_df = function(tweetdir) {
   filenames = dir(tweetdir)
-  df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T, fileEncoding = "UTF-8")
+  df = read.csv(paste(tweetdir, filenames[1], sep = "/"), header = T)
   for(i in 2:length(filenames)) {
     filename = filenames[i]
-    temp = read.csv(paste(tweetdir, filename, sep = "/"), header = T, fileEncoding = "UTF-8")
+    temp = read.csv(paste(tweetdir, filename, sep = "/"), header = T)
     df = rbind(df, temp)
   }
   return(df)
