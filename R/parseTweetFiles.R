@@ -207,6 +207,7 @@ locate_tweets = function(located_tweets) {
 #' 
 #' @export 
 process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
+  Sys.setlocale('LC_ALL','C') 
   filenames = dir(tweetdir)
   editedfns = paste(filenames, "e", sep = "")
   existing = dir(outputdir)
