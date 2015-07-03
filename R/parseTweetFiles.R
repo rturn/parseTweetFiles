@@ -209,6 +209,8 @@ locate_tweets = function(located_tweets) {
 process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
   Sys.setlocale('LC_ALL','C') 
   filenames = dir(tweetdir)
+  df = data.frame()
+  names(df) = vars
   editedfns = paste(filenames, "e", sep = "")
   existing = dir(outputdir)
   
@@ -233,16 +235,12 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", ...) {
       if(loc == TRUE) {
         etweets.df = locate_tweets(etweets.df)
       }
+      df = rbind(df, etweets.df)
       write.csv(x = etweets.df, file = paste(paste(outputdir, filename, sep = "/"), "e", sep = ""), row.names = FALSE)
     }
   }
   
-  output = rep("", length(filenames))
-  output[1] = filenames[1]
-  for(i in 2:length) {
-    output[i] = filenames[i]
-  }
-  return(output)
+  return(df)
 }
 
 #' Create a data frame from multiple tweet files
