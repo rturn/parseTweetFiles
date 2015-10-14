@@ -13,7 +13,7 @@ install_github("rturn/parseTweetFiles")
 For most uses, this package is easy to use. Just place all tweets you want to edit in one folder, and run the process.files functions. If necessary, clean_tweets and locate_tweets can be used independently.
 
 ```{r, eval = FALSE}
-process.files("~/Documents/RawTweets", "~/Documents/EditedTweets")
-process.files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
+process_files("~/Documents/RawTweets", "~/Documents/EditedTweets")
+process_files("~/Documents/RawTweets", "~/Documents/EditedTweets", loc = TRUE, 
     vars = c("text", "time_zone"), tz = c("Jerusalem", "NA"), stoplist = stoplist)
 ```
