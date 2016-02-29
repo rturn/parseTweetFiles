@@ -5,9 +5,9 @@ be used to fit a series of topic models to a dataframe of time stamped Tweets.
 
 This package can be downloaded directly from github as follows:
 
-install.packages(c("qtl", "htmlwidgets", "devtools"))
-library(devtools)
-install_github("rturn/parseTweetFiles")
+install.packages(c("qtl", "htmlwidgets", "devtools"))  
+library(devtools)  
+install_github("rturn/parseTweetFiles")  
 
 ###Examples
 
