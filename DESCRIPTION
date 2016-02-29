@@ -1,10 +1,12 @@
 Package: parseTweetFiles
-Version: 0.7
+Version: 0.8
 Title: Parse Tweet Files
-Description: All code necessary to convert tweet files downloaded by the StreamR package to a usable format. Can tag tweets with zip codes, filter variables, filter by time zone, remove all strange symbols from tweets, and convert them into a character array.
+Description: All code necessary to convert tweet files downloaded by the StreamR package to a usable format. Can tag tweets with zip codes, filter variables, filter by time zone, remove all strange symbols from tweets, and convert them into a character array. Can also fit topic models to a set of timestamped Tweets.
 License: MIT + file LICENSE
 Author: Robert Turner <rwturner@wisc.edu>
 Maintainer: Robert Turner <rwturner@wisc.edu>
 Suggests: knitr, rmarkdown
-Depends: dplyr, sp, maptools
+Imports: dplyr, sp, maptools, maptpx, LDAvis, tm
+Depends: R (>= 2.10)
+LazyData: true
 VignetteBuilder: knitr
