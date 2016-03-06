@@ -244,7 +244,7 @@ process_files = function(tweetdir, outputdir, loc = FALSE, vars = "text", makedf
 manage_tweet_df = function(filename, tweetdir, outputdir, vars, extras, loc, makedf) {
   if(file.info(paste(tweetdir, filename, sep = "/"))$size != 0) {
     tweets.df = read.csv(paste(tweetdir, filename, sep = "/"), header = T)
-    tweets.df = dplyr::select(tweets.df, dplyr::one_of(vars))
+    tweets.df = dplyr::select(tweets.df, one_of(vars))
     etweets.df = clean_tweets(tweets.df, tz = extras$tz, stoplist = extras$stoplist) 
     etweets.df = dplyr::filter(etweets.df, text != "")
     if(loc == TRUE) {
